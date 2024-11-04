@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dockerize-web-api-svc
+  namespace: dockerize
+spec:
+  selector:
+    app: dockerize-web-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+  type: ClusterIP

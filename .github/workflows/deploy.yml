@@ -27,3 +27,32 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/dockerize-me:latest
+    
+    deploy-k8s:
+      needs: build-and-deploy
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v1
+
+        - name: Set up kubectl
+          uses: azure/setup-kubectl@v3
+          with:
+            version: 'latest'
+
+        - name: Create .kube directory
+          run: mkdir -p ~/.kube
+
+        - name: Set up KubeConfig
+          env:
+            KUBECONFIG: ${{ secrets.KUBECONFIG }}
+            run: echo "$KUBECONFIG" > ~/.kube/config
+
+        - name: Apply K8s manifests
+          run: |
+            kubectl apply -f k8s/ns.yaml
+            kubectl apply -f k8s/deployment.yaml
+            kubectl apply -f k8s/service.yaml

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dockerize-web-api
+  namespace: dockerize
+  labels:
+    app: dockerize-web-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dockerize-web-api
+  template:
+    metadata:
+      name: dockerize-web-api
+      labels:
+        app: dockerize-web-api
+    spec:
+      containers:
+        - name: dockerize-web-api
+          image: qcodelabsllc/dockerize-me:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+              name: http
+      restartPolicy: Always
