@@ -31,6 +31,7 @@ jobs:
   deploy-k8s:
     needs: build-and-deploy
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -49,7 +50,7 @@ jobs:
       - name: Set up KubeConfig
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
-          run: echo "$KUBECONFIG" > ~/.kube/config
+        run: echo "$KUBECONFIG" > ~/.kube/config
 
       - name: Apply K8s manifests
         run: |
